@@ -6,12 +6,11 @@ services:
       context: ./file-service
       dockerfile: Dockerfile
     container_name: file-serivce
-    ports:
-      - "4010:81"
     environment:
-      - PORT=4010
+      - PORT=81
     restart: "no"
-    network_mode: "host"
+    networks:
+      - internal-communication
   video-streaming:
     image: video-streaming
     build:
@@ -21,11 +20,12 @@ services:
     ports:
       - "4000:80"
     environment:
-      - PORT=4000
-      - FILE_SERVICE_HOST=localhost
-      - FILE_SERVICE_PORT=4010
+      - PORT=80
+      - FILE_SERVICE_HOST=file-service
+      - FILE_SERVICE_PORT=81
     restart: "no"
-    network_mode: "host"
+    networks:
+      - internal-communication
 networks:
-  internal:
+  internal-communication: {}
 
