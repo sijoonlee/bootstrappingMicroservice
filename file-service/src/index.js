@@ -3,11 +3,16 @@ const fs  = require("fs");
 
 const app = express();
 
-const port = process.env.PORT ?? 3000;
+const port = process.env.PORT ?? 4088;
 
 app.get("/video", (req, res) => {
-    const path = "./video/sample.mp4"
-    fs.stat(path, (err, stats) => {
+    const { path } = req.query;
+
+    const filePath = path == null
+        ? "./video/sample.mp4"
+        : "./video/" + path;
+
+    fs.stat(filePath, (err, stats) => {
         if(err) {
             console.error("Error on reading file");
             console.error(err);
@@ -20,7 +25,7 @@ app.get("/video", (req, res) => {
             "Content-Type": "video/mp4"
         });
 
-        fs.createReadStream(path).pipe(res);
+        fs.createReadStream(filePath).pipe(res);
     })
 })
 

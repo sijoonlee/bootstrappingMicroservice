@@ -1,0 +1,31 @@
+version: "3"
+services:
+  file-service:
+    image: file-service
+    build:
+      context: ./file-service
+      dockerfile: Dockerfile
+    container_name: file-serivce
+    ports:
+      - "4010:81"
+    environment:
+      - PORT=4010
+    restart: "no"
+    network_mode: "host"
+  video-streaming:
+    image: video-streaming
+    build:
+      context: ./video-streaming
+      dockerfile: Dockerfile
+    container_name: video-streaming
+    ports:
+      - "4000:80"
+    environment:
+      - PORT=4000
+      - FILE_SERVICE_HOST=localhost
+      - FILE_SERVICE_PORT=4010
+    restart: "no"
+    network_mode: "host"
+networks:
+  internal:
+
