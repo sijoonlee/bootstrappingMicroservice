@@ -1,5 +1,19 @@
 version: "3"
 services:
+  db:
+    image: mongo:6.0.1
+    container_name: db
+    restart: always
+    ports:
+      - "27000:27017"
+    volumes:
+      - /home/sijoonlee/Documents/BootstrappingMicroservices/db:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=test
+      - MONGO_INITDB_ROOT_USERNAME=rootuser
+      - MONGO_INITDB_ROOT_PASSWORD=rootpass
+    networks:
+      - internal-communication
   file-service:
     image: file-service
     build:
@@ -23,6 +37,9 @@ services:
       - PORT=80
       - FILE_SERVICE_HOST=file-service
       - FILE_SERVICE_PORT=81
+      - DBHOST=mongodb://rootuser:rootpass@db:27017
+      - DBNAME=test
+      - COLLECTION_NAME=videos
     restart: "no"
     networks:
       - internal-communication
