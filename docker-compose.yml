@@ -43,6 +43,37 @@ services:
     restart: "no"
     networks:
       - internal-communication
+  history-service:
+    image: history
+    build:
+      context: ./history-service
+      dockerfile: Dockerfile
+    container_name: history
+    volumes:
+      - /tmp/history/npm-cache:/root/.npm:z
+      - ./history/src:/usr/src/app/src:z
+    ports:
+      - "4002:80"
+    environment:
+      - PORT=80
+      - RABBIT_URI=amqp://guest@rabbit:5672
+      - DBHOST=mongodb://rootuser:rootpass@db:27017
+      - DBNAME=test
+      - COLLECTION_NAME=history
+      - NODE_ENV=development
+    depends_on:
+      - db
+      - rabbit
+  rabbit:
+    image: rabbitmq:3.8.1-management
+    container_name: rabbit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    expose:
+      - "5672"
+      - "15672"
+    restart: always
 networks:
   internal-communication: {}
 

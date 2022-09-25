@@ -60,3 +60,26 @@ const COLLECTION_NAME = process.env.COLLECTION_NAME ?? 'videos';
         console.log(`App listening to port ${port}`)
     })
 })();
+
+function sendViewMessage(videoPath) {
+    const postOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+    }
+
+    const requestBody = { videoPath }
+
+    const req = http.request("http://history/viewed", postOptions)
+
+    req.on("close", // when request is complete
+        () => {
+
+    })
+
+    req.on("error", (error) => {
+
+    })
+
+    req.write(JSON.stringify(requestBody));
+    req.end();
+}
